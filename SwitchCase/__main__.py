@@ -1,18 +1,42 @@
- 
+#
+#                            SwitchCase __main__.py | 2021 (c) Mrmagicpie
+#
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
+#
+#
 from re import split as spl
-
+#
+# 
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
+#
+#
 class switch:
+    """
+    The switch class is a python extension written in python. It allows the use 
+    of the switch case, syntax similar to those in C#, Bash, Java, etc. 
+    """
 
-    # Create some variables to use in the class. I put them here and not in a self. because it's easier to read. 
+    # Create some variables to use in the class. 
+    # I put them here and not in a self. because 
+    # it's easier to read. 
     command_list = []
     code_count   = 1
 
     def __init__(self, 
                  code=None, 
                  value=None):
+        """
+        The switch class is a python extension written in python. It allows the use 
+        of the switch case, syntax similar to those in C#, Bash, Java, etc. 
+        :param code: Your str code. This is optional as you can use the .case() function to evaulate code.
+        :param value: Your switch value. This is also optional because you can specify the value in your code.
+        :return: Returns the class.
+        """
 
-        # See if the user supplied a predefined value(like a switch statement), if they did **and** it's a string, we'll add quotes to the 
-        # begining and end of the value. This just makes it easier to use it in a string case. 
+        # See if the user supplied a predefined value(like a switch statement), 
+        # if they did **and** it's a string, we'll add quotes to the begining 
+        # and end of the value. This just makes it easier to use it in a string 
+        # case. 
         if value is not None:
             if type(value) == str:
                 if not value.startswith('"'):
@@ -24,8 +48,10 @@ class switch:
         self.code  = code 
         self.value = value
         
-        # If the code is set in the class initialization we'll see if it's a string and then run it. If it isn't a string it'll throw
-        # a ValueError because I want a string >:(
+        # If the code is set in the class initialization 
+        # we'll see if it's a string and then run it. If 
+        # it isn't a string it'll throw a ValueError because
+        # I want a string >:(
         if code is not None:
             if type(code) != str:
                 raise ValueError("Ensure you are inputting a string into this class!")
@@ -41,7 +67,8 @@ class switch:
         :return: Returns whatever your code runs :> 
         """
 
-        # Add one to this class's code count, and then redefine the code var to be used later on.
+        # Add one to this class's code count, and then 
+        # redefine the code var to be used later on.
         self.code_count += 1
         self.code        = code 
 
@@ -82,7 +109,8 @@ class switch:
         in_valid_case     = False 
         found_valid_case  = False 
 
-        # Enumerate over each line to get the line number to be used in SyntaxErrors and the line for the actual data.
+        # Enumerate over each line to get the line number to be 
+        # used in SyntaxErrors and the line for the actual data.
         for line_number, line in enumerate(refined_case):
 
             # If the line is nothing or a comment we'll ignore it.
@@ -90,8 +118,11 @@ class switch:
             elif line.startswith("#"):       continue 
 
 
-            # Our first statement is the Switch! The Switch statement is used to define what we're comparing. This can be used
-            # to redefine our conditionals at runtime and to define them if the value arg isn't passed at class initialization.
+            # Our first statement is the Switch! The Switch 
+            # statement is used to define what we're comparing. 
+            # This can be used to redefine our conditionals at 
+            # runtime and to define them if the value arg isn't
+            # passed at class initialization.
             elif line.startswith("switch"):
 
                 # Attempt to split the switch and then process the 
@@ -137,10 +168,10 @@ class switch:
                     # if it is we'll try to use the third arg 
                     # and if that fails we'll then tell the user 
                     # that their syntax is wrong. 
-                    if case_lines[2].isspace() or case_lines[2] == '':
-                        try: command = case_lines[3]
-                        except: raise SyntaxError(f"The interpreter cannot find a case statement at line {line_number + 1}! Follow this format: `case statement:`")  
-                    else: command = case_lines[2]
+                    if case_lines[1].isspace() or case_lines[1] == '':
+                        try: command = case_lines[2]
+                        except: raise SyntaxError(f"Value Case - The interpreter cannot find a case statement at line {line_number + 1}! Follow this format: `case statement:`")  
+                    else: command = case_lines[1]
 
                     # If all that was sucessful we'll add the 
                     # command to the list to be executed soon!
@@ -161,10 +192,10 @@ class switch:
                     # if it is we'll try to use the third arg 
                     # and if that fails we'll then tell the user 
                     # that their syntax is wrong. 
-                    if case_lines[2].isspace() or case_lines[2] == '':
-                        try: command = case_lines[3]
-                        except: raise SyntaxError(f"The interpreter cannot find a case statement at line {line_number + 1}! Follow this format: `case statement:`")  
-                    else: command = case_lines[2]
+                    if case_lines[1].isspace() or case_lines[1] == '':
+                        try: command = case_lines[2]
+                        except: raise SyntaxError(f"Default Case - The interpreter cannot find a case statement at line {line_number + 1}! Follow this format: `case statement:`")  
+                    else: command = case_lines[1]
 
                     # If all that was sucessful we'll add the 
                     # command to the list to be executed soon!
@@ -180,7 +211,7 @@ class switch:
             # we can add the users command to the command list
             # **if** we're in a valid case **and** in a valid 
             # case, if we aren't then we just continue or raise
-            # as SyntaxError.
+            # a SyntaxError.
             else:
 
                 if   not in_case:       raise SyntaxError(f"Syntax error at line {line_number + 1}!")
@@ -191,11 +222,10 @@ class switch:
 
 
 #
-
-# Examples below! Not actual class stuff.
-
+#                                              Examples:
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 #
-
+#
 
 def ded():
     print("double ded")
@@ -211,24 +241,30 @@ case 2: print("ded")
     print("ded")
 
 case "oh":
-    # print('get syntax errored bro')
     ded()
 
 case default:
     print("default case - catches everything else")
 """
 
-case2 = """
+value = 1
+case2 = f"""
 
-switch (2):
+switch ({value}):
 
 case 1:
-    print("fxc is a hoe")
+    print("f strings work too!")
 
 case default:
     print("E")
 """
 
 switch1 = switch(value=2)
-switch1.case(code=case)
-switch1.case(code=case2)
+switch1 . case(code=case)
+switch1 . case(code=case2)
+
+#
+# 
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
+#
+#
