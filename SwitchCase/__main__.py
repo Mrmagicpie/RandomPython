@@ -1,22 +1,49 @@
+ 
+from re import split as spl
 
-from typing import Union as U 
-from re     import split as spl
+def ded():
+    print("double ded")
 
 class switch:
-    def __init__(self, value, case, **args):
 
-        if type(case) != str:
-            raise ValueError("Ensure you are inputting a string into this class!")
+    command_list = []
+    code_count   = 1
+
+    def __init__(self, 
+                 code=None, 
+                 value=None):
+
+        if value is not None:
+            if type(value) == str:
+                if not value.startswith('"'):
+                    value = '"' + value
+                if not value.endswith('"'):
+                    value += '"'
+
+        self.code  = code 
+        self.value = value
         
-        self.code_count   = 1
-        self.case         = case 
-        self.value        = value 
-        self.command_list = []
-        
+        if code is not None:
+            if type(code) != str:
+                raise ValueError("Ensure you are inputting a string into this class!")
+            
+            self._proccess_lines()
+            self._proccess_commands()
+            self._clear_vars()
+
+    def case(self, code: str):
+
+        self.code_count += 1
+        self.code        = code 
+
         self._proccess_lines()
         self._proccess_commands()
+        self._clear_vars()
 
-        return None
+    def _clear_vars(self):
+
+        self.command_list.clear()
+        self.code = ""
 
     def _proccess_commands(self):
 
@@ -27,12 +54,12 @@ class switch:
 
     def _proccess_lines(self):
 
-        self.refined_case = self.case.split("\n")
+        refined_case      = self.code.split("\n")
         in_case           = False 
         in_valid_case     = False 
         found_valid_case  = False 
 
-        for line_number, line in enumerate(self.refined_case):
+        for line_number, line in enumerate(refined_case):
 
             if line.isspace() or line == "": continue 
             elif line.startswith("#"):       continue 
@@ -45,17 +72,18 @@ class switch:
                     elif item.isspace() or item == "":
                         switch_lines.remove(item)
 
-                self.value = switch_lines[1].replace("(", "").replace("):", "")
-
+                try: self.value = switch_lines[1].replace("(", "").replace("):", "")
+                except IndexError: raise SyntaxError(f"Syntax error at line {line_number + 1}! Follow this format: `switch (value):`")
             
             elif line.startswith("case"):
 
                 in_case    = True 
                 case_lines = spl(" |:", line)
 
-                if str(self.value) == str(case_lines[1]):
+                if str(case_lines[1]) == str(self.value):
                     
-                    in_valid_case = True 
+                    found_valid_case = True 
+                    in_valid_case    = True 
                     if case_lines[2].isspace() or case_lines[2] == '':
                         try: command = case_lines[3]
                         except: continue  
@@ -81,24 +109,42 @@ class switch:
                     in_valid_case = False
             
             else:
-                if   not in_case: raise SyntaxError(f"Syntax error at line {line_number + 1}!")
+
+                if   not in_case:       raise SyntaxError(f"Syntax error at line {line_number + 1}!")
                 elif not in_valid_case: continue 
-                self.command_list.append(line)
+                self.command_list.append(line.lstrip())
 
         return None
 
-
 case = """
-switch ("oh"):
+
+switch (2):
+
 case 1: 
-print("ok")
+    print("ok")
+
 case 2: print("ded")
-print("ded")
+    print("ded")
+
 case "oh":
-print('get syntax errored bro')
-ded
+    # print('get syntax errored bro')
+    ded()
+
 case default:
-print("default case - catches everything else")
+    print("default case - catches everything else")
 """
 
-switch(value=2, case=case)
+case2 = """
+
+switch (2):
+
+case 1:
+    print("fxc is a hoe")
+
+case default:
+    print("E")
+"""
+
+switch1 = switch(value=2)
+switch1.case(code=case)
+switch1.case(code=case2)
