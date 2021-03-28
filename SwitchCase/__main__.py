@@ -4,7 +4,8 @@
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 #
 #
-from re import split as spl
+from re     import split    as spl
+from typing import Optional as O
 #
 # 
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
@@ -23,8 +24,9 @@ class switch:
     code_count   = 1
 
     def __init__(self, 
-                 code=None, 
-                 value=None):
+                 code      : str  = None, 
+                 value     : any  = None,
+                 clear_code: bool = True) -> None:
         """
         The switch class is a python extension written in python. It allows the use 
         of the switch case, syntax similar to those in C#, Bash, Java, etc. 
@@ -39,45 +41,73 @@ class switch:
         # case. 
         if value is not None:
             if type(value) == str:
-                if not value.startswith('"'):
-                    value = '"' + value
-                if not value.endswith('"'):
-                    value += '"'
+                value = self._proccess_str_value(value)
 
         # Define the global variables, for now.
         self.code  = code 
         self.value = value
+        self.clear = clear_code
         
         # If the code is set in the class initialization 
         # we'll see if it's a string and then run it. If 
         # it isn't a string it'll throw a ValueError because
         # I want a string >:(
         if code is not None:
-            if type(code) != str:
-                raise ValueError("Ensure you are inputting a string into this class!")
             
             self._proccess_lines()
-            self._proccess_commands()
-            self._clear_vars()
+            self._proccess_commands(process_switch=False if value is not None else True)
+            if self.clear: self._clear_vars()
 
-    def case(self, code: str):
+    def case(self, 
+             code : str  = None, 
+             value: any  = None,
+             rerun: bool = False) -> O[RuntimeWarning]:
         """
         Interprete and run your switch case statements.
         :param code: Your multiline string of all your code. 
         :return: Returns whatever your code runs :> 
         """
 
-        # Add one to this class's code count, and then 
-        # redefine the code var to be used later on.
+        # Add one to this class's code count
         self.code_count += 1
-        self.code        = code 
+
+        if value is not None:
+            if type(value) == str:
+                value = self._proccess_str_value(value)
+            self.value = value
+
+        # See if the user wants to rerun the code. If
+        # there isn't any code to run we'll raise a 
+        # RuntimeWarning and let the user know what
+        # the problem is!
+        if rerun:
+            if self.code is None:
+                raise RuntimeWarning("You have not supplied any code to rerun!")
+
+            else:
+                if len(self.command_list) != 0 and value is None:
+                    self._proccess_commands()
+                    if self.clear: self._clear_vars()
+
+                elif value is not None:
+                    self._proccess_lines(process_switch=False if value is not None else True)
+                    self._proccess_commands()
+                    if self.clear: self._clear_vars()
+
+                else:
+                    raise RuntimeWarning("No code has been rerun because there has been no code processed!")
+
+        # Redefine the code var to be used later on.
+        if code is not None:
+            self._clear_vars()
+            self.code = code 
 
         # Run the code.
         self._proccess_lines()
         self._proccess_commands()
-        self._clear_vars()
+        if self.clear: self._clear_vars()
 
-    def _clear_vars(self):
+    def _clear_vars(self) -> None:
         """
         Internal function to clear variables.
         :return: Empty class vars.
@@ -86,7 +116,17 @@ class switch:
         self.command_list.clear()
         self.code = ""
 
-    def _proccess_commands(self):
+    def _proccess_str_value(self, value: str) -> str:
+
+        if not value.startswith('"'):
+            value = '"' + value
+
+        if not value.endswith('"'):
+            value += '"'
+        
+        return value 
+
+    def _proccess_commands(self) -> O[SyntaxError]:
         """
         Internal function to proccess commands found by the interpreter. 
         :return: Whatever your code is <:
@@ -97,7 +137,7 @@ class switch:
             except Exception as e:
                 raise SyntaxError(str(e))
 
-    def _proccess_lines(self):
+    def _proccess_lines(self, process_switch: bool = True) -> None:
         """
         Internal function to process the code given.
         :return: None, SyntaxError, and invoking the :func:_proccess_commands function.
@@ -117,13 +157,16 @@ class switch:
             if line.isspace() or line == "": continue 
             elif line.startswith("#"):       continue 
 
+            line = line.lstrip()
 
             # Our first statement is the Switch! The Switch 
             # statement is used to define what we're comparing. 
             # This can be used to redefine our conditionals at 
             # runtime and to define them if the value arg isn't
             # passed at class initialization.
-            elif line.startswith("switch"):
+            if line.startswith("switch"):
+
+                if not process_switch: continue 
 
                 # Attempt to split the switch and then process the 
                 # arg into a usable value var. It will throw a 
@@ -175,7 +218,7 @@ class switch:
 
                     # If all that was sucessful we'll add the 
                     # command to the list to be executed soon!
-                    self.command_list.append(command.lstrip())
+                    self.command_list.append(command)
 
                 elif str(case_lines[1]) == "default":
                     
@@ -199,7 +242,7 @@ class switch:
 
                     # If all that was sucessful we'll add the 
                     # command to the list to be executed soon!
-                    self.command_list.append(command.lstrip())
+                    self.command_list.append(command)
 
                 else:
                     # If it isn't default or the users value
@@ -216,10 +259,7 @@ class switch:
 
                 if   not in_case:       raise SyntaxError(f"Syntax error at line {line_number + 1}!")
                 elif not in_valid_case: continue 
-                self.command_list.append(line.lstrip())
-
-        return None
-
+                self.command_list.append(line)
 
 #
 #                                              Examples:
@@ -232,12 +272,12 @@ def ded():
 
 case = """
 
-switch ("oh"):
+switch (2):
 
 case 1: 
     print("ok")
 
-case 2: print("ded")
+case 2:
     print("ded")
 
 case "oh":
@@ -245,6 +285,7 @@ case "oh":
 
 case default:
     print("default case - catches everything else")
+
 """
 
 value = 1
@@ -257,11 +298,15 @@ case 1:
 
 case default:
     print("E")
+
 """
 
-switch1 = switch(value=2)
+# TODO: Test value in .case() 
+
+switch1 = switch(clear_code=False)
 switch1 . case(code=case)
-switch1 . case(code=case2)
+switch1 . case(rerun=True)
+# switch1 . case(code=case2, rerun=True)
 
 #
 # 
