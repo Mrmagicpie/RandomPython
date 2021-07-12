@@ -11,9 +11,9 @@ if not os.path.isdir(location):
 location = os.path.abspath(location)
 name  = str(input("Name to search: ")).strip()
 save  = str(input("Should I save to json? (y/n) ")).lower()
-if save not in {"y", "yes"}:
-    save = False 
-else:
+save  = (save in {"y", "yes"})
+
+if save:
     save = True 
     print("Please note - This will overide that file.")
     save_location = str(input("What file should I save it in? "))
