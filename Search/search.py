@@ -14,7 +14,6 @@ save  = str(input("Should I save to json? (y/n) ")).lower()
 save  = (save in {"y", "yes"})
 
 if save:
-    save = True 
     print("Please note - This will overide that file.")
     save_location = str(input("What file should I save it in? "))
     save_location = save_location.replace(".json", "") + ".json"
