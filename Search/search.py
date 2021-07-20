@@ -14,6 +14,7 @@ save  = str(input("Should I save to json? (y/n) ")).lower()
 save  = (save in {"y", "yes"})
 
 if save:
+    save = True 
     print("Please note - This will overide that file.")
     save_location = str(input("What file should I save it in? "))
     save_location = save_location.replace(".json", "") + ".json"
@@ -31,7 +32,7 @@ class ItemFound:
     def __eq__(self, obj):
         if not isinstance(obj, ItemFound):
             return False 
-        return self.name == obj.name and self.dir == obj.dir 
+        return self.name == obj.name and self.dir == obj.dir
 
 def list_dir(dir: str):
     try:
@@ -43,10 +44,10 @@ def search_directory(contents: list):
     for item in contents:
         item_path = os.path.join(location, item)
         if os.path.isdir(item_path):
-            item_path = list_dir(item_path)
-            if not item_path[1]:
+            item_path_output = list_dir(item_path)
+            if not item_path_output[1]:
                 continue 
-            search_directory(item_path[0])
+            search_directory(item_path_output[0])
         
         if name in item:
             found.add(ItemFound(item, item_path))
