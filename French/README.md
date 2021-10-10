@@ -52,6 +52,10 @@ keywords = {
 }
 ```
 
-![french_python](https://user-images.githubusercontent.com/70033286/136680765-25aadaa9-dc87-42be-834d-3ef62f8e5099.png)
+<!-- ![french_python](https://user-images.githubusercontent.com/70033286/136680765-25aadaa9-dc87-42be-834d-3ef62f8e5099.png) -->
+<div align="center">
+    <p>Image credit to <a href="https://github.com/Fxcilities">Fxcilities</a></p>
+    <img src="https://user-images.githubusercontent.com/70033286/136680765-25aadaa9-dc87-42be-834d-3ef62f8e5099.png" height="100" width="100">
+</div>
 
 <p align="center">Copyright (c) 2021 Mrmagicpie</p>
