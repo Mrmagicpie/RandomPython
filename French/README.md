@@ -1,8 +1,8 @@
 # French Python
 
-Another small script that changes French python keywords to English ones. Below are the keywords in python dictionary form if you want see them.
+Another small script that changes French python keywords to English ones. Below are the keywords in python dictionary form if you want see them. I have also included a test script. It's nothing special but it works. 
 
-I have also included a test script. It's nothing special but it works. Run with this command (file names adjusted) `python french_python.py example_french.py y`
+Run with this command (file names adjusted) `python french_python.py example_french.py y`
 
 ## Command line options
 
@@ -51,5 +51,7 @@ keywords = {
     "pause": "break"
 }
 ```
+
+![french_python](https://user-images.githubusercontent.com/70033286/136680765-25aadaa9-dc87-42be-834d-3ef62f8e5099.png)
 
 <p align="center">Copyright (c) 2021 Mrmagicpie</p>
